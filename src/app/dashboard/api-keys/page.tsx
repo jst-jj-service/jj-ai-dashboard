@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ApiClient } from '../../../lib/api-client';
+import { ApiClient, getApiBase } from '../../../lib/api-client';
 import { formatDate } from '../../../lib/utils';
 import {
   KeyRound,
@@ -71,13 +71,10 @@ export default function ApiKeysPage() {
     setTimeout(() => setCopiedKey(false), 2000);
   };
 
-  const [apiUrl, setApiUrl] = useState('http://localhost:3001');
+  const [apiUrl, setApiUrl] = useState('https://jj-ai-gateway.onrender.com');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isRemote = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-      setApiUrl(process.env.NEXT_PUBLIC_API_URL || (isRemote ? 'https://jj-ai-gateway.onrender.com' : 'http://localhost:3001'));
-    }
+    setApiUrl(getApiBase());
   }, []);
 
   return (
