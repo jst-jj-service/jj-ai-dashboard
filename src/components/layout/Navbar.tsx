@@ -7,7 +7,7 @@ import { ShoppingBag, Zap, User, LogOut, Shield } from 'lucide-react';
 
 export function Navbar() {
   const { user, quota, logout } = useAuth();
-  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://your-shop.com';
+  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://jst-jj-service.github.io';
 
   const remainingTokens = quota?.remainingTokens ?? 0;
   const isZeroQuota = remainingTokens <= 0;
