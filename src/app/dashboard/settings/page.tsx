@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../lib/auth-context';
-import { ApiClient } from '../../../lib/api-client';
+import { ApiClient, getApiBase } from '../../../lib/api-client';
 import { formatDate } from '../../../lib/utils';
 import {
   Settings,
@@ -73,10 +73,14 @@ export default function SettingsPage() {
     }
   };
 
+  const [apiUrl, setApiUrl] = useState('https://jj-ai-gateway.onrender.com');
+
+  useEffect(() => {
+    setApiUrl(getApiBase());
+  }, []);
+
   const copyBaseUrl = () => {
-    const isRemote = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    const url = process.env.NEXT_PUBLIC_API_URL || (isRemote ? 'https://jj-ai-gateway.onrender.com' : 'http://localhost:3001');
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(apiUrl);
     setCopiedUrl(true);
     setTimeout(() => setCopiedUrl(false), 2000);
   };
@@ -221,7 +225,7 @@ export default function SettingsPage() {
         </p>
 
         <div className="flex items-center justify-between p-3 rounded-xl bg-background border border-surfaceBorder text-xs font-mono text-slate-200">
-          <span>{process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}</span>
+          <span>{apiUrl}</span>
           <button
             onClick={copyBaseUrl}
             className="flex items-center gap-1 text-primary-400 hover:text-primary-300 transition-colors cursor-pointer"
