@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import {
   Tag,
   Search,
@@ -12,7 +13,9 @@ import {
   Clock,
   Sparkles,
   Terminal,
-  Cpu
+  Cpu,
+  MessageCircle,
+  ArrowRight
 } from 'lucide-react';
 
 interface ModelInfo {
@@ -624,6 +627,42 @@ export default function ModelPricingPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* WhatsApp Top-up & Redeem Banner */}
+      <div className="rounded-2xl bg-gradient-to-br from-emerald-950/40 via-surface to-surface border border-emerald-500/30 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-lg">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+            <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Direct WhatsApp Top-Up</span>
+          </div>
+          <h3 className="text-base font-bold text-white">
+            Need More Token Balance? WhatsApp <span className="text-emerald-400 font-mono">0178241445</span>
+          </h3>
+          <p className="text-xs text-slate-300 max-w-xl">
+            Choose your quota tier (1M, 5M, 10M, or 20M tokens) and message admin directly on WhatsApp. Receive your instant CDK activation code and redeem it on the Payment page!
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href="https://wa.me/60178241445?text=Hi%2C%20I%20would%20like%20to%20top%20up%20AI%20Gateway%20credits"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all"
+          >
+            <MessageCircle className="w-4 h-4 fill-slate-950" />
+            <span>Chat on WhatsApp</span>
+          </a>
+
+          <Link
+            href="/dashboard/payment"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface border border-surfaceBorder hover:border-slate-500 text-slate-200 text-xs font-semibold transition-all"
+          >
+            <span>Go to Top-Up & Redeem</span>
+            <ArrowRight className="w-3.5 h-3.5 text-primary-400" />
+          </Link>
         </div>
       </div>
     </div>
