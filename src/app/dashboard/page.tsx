@@ -34,7 +34,7 @@ export default function DashboardOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [activeGuideTab, setActiveGuideTab] = useState<'cursor' | 'claude' | 'python' | 'curl'>('cursor');
   const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
-  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://your-shop.com';
+  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://jst-jj-service.github.io';
 
   const copyCode = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
