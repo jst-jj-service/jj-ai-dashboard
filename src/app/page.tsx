@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../lib/auth-context';
+import { getApiBase } from '../lib/api-client';
 import {
   Zap,
   Shield,
@@ -26,8 +27,12 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<'python' | 'node' | 'curl'>('python');
   const [copied, setCopied] = useState(false);
 
-  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://your-shop.com';
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL || 'https://jst-jj-service.github.io';
+  const [apiUrl, setApiUrl] = useState('https://jj-ai-gateway.onrender.com');
+
+  useEffect(() => {
+    setApiUrl(getApiBase());
+  }, []);
 
   const codeSnippets = {
     python: `from openai import OpenAI
