@@ -1,8 +1,32 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-    ? 'https://jj-ai-gateway.onrender.com'
-    : 'http://localhost:3001');
+/**
+ * Dynamic API Base URL resolver.
+ * Evaluates dynamically in the browser at request execution time so that:
+ * 1. Customers on the public Render web dashboard (https://jj-ai-dashboard.onrender.com)
+ *    or custom cloud domains communicate with https://jj-ai-gateway.onrender.com.
+ * 2. Standalone backend portal visits (https://jj-ai-gateway.onrender.com) use the origin.
+ * 3. Local administrator/developer testing on localhost:3000 connects to http://localhost:3001.
+ */
+export function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    // Local development or local administrator access
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1' || host.endsWith('.local')) {
+      return 'http://localhost:3001';
+    }
+    // Directly hosted on the Render gateway backend (unified static serving)
+    if (host.includes('jj-ai-gateway') || host.includes('gateway')) {
+      return window.location.origin;
+    }
+    // Check if a non-localhost custom API URL was configured in environment
+    const customUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (customUrl && !customUrl.includes('localhost') && !customUrl.includes('127.0.0.1')) {
+      return customUrl;
+    }
+    // Default public cloud gateway
+    return 'https://jj-ai-gateway.onrender.com';
+  }
+  return 'https://jj-ai-gateway.onrender.com';
+}
 
 export interface ApiResponse<T = any> {
   data?: T;
@@ -32,6 +56,7 @@ export class ApiClient {
     path: string,
     options: RequestInit = {}
   ): Promise<{ data: T | null; error: string | null; status: number }> {
+    const baseUrl = getApiBase();
     const token = this.getToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -43,7 +68,7 @@ export class ApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE}${path}`, {
+      const res = await fetch(`${baseUrl}${path}`, {
         ...options,
         headers
       });
@@ -105,8 +130,9 @@ export class ApiClient {
     adminList: () =>
       ApiClient.request('/api/cdk/admin/list'),
     exportCsv: async (): Promise<Blob> => {
+      const baseUrl = getApiBase();
       const token = ApiClient.getToken();
-      const res = await fetch(`${API_BASE}/api/cdk/admin/export`, {
+      const res = await fetch(`${baseUrl}/api/cdk/admin/export`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (!res.ok) {
@@ -114,7 +140,7 @@ export class ApiClient {
       }
       return res.blob();
     },
-    getExportUrl: () => `${API_BASE}/api/cdk/admin/export`
+    getExportUrl: () => `${getApiBase()}/api/cdk/admin/export`
   };
 
   // Usage endpoints
